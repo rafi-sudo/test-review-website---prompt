@@ -66,3 +66,47 @@ step by step:
 6. Salin juga asset media ( salah satu)
 7. saat salin get dan fetch, pasti IP origin akan muncul, lalu kita tes IP di browser apakah ada kerentanan?
 # Case :
+Index of /
+
+Name	Last Modified	Size
+
+Directorycgi-bin
+
+2024-09-15 18:51	-
+
+Fileadmrwn2_dbench.sql
+
+2025-05-08 20:12	2k
+
+[TXT]i.php
+
+2024-09-17 11:55	1k
+
+[TXT]phptest.php
+
+2025-05-08 20:20	6k
+
+[CMP]phptest.zip
+
+2025-05-08 20:21	3k
+
+Proudly Served by LiteSpeed Web Server at 202.10.43.109 Port 443
+(Terindikasi adanya listing directory web) 
+itu sangat rentan
+
+langkah berikutnya :
+1. Ping domain apakah benar IP itu ter arah ke domainnya
+2. cek A Records dig +short (domain)
+3. cek PTR (DNS Reverse) dig -x IP situs +short
+4. traceroute domain (opsional)
+5. jika benar coba whois IP dan Domain
+6. cek subdomain bisa pakai tools subdomainfinder.c99.nl
+7. nah jika subdomain banyak kebuka, kita cek lebih dalam pakai tool nmap
+8. Langkah terakhir cek routing bgp nya IP origin kemana di : bgp.tools
+contohnya:
+![rt-202 10 43](https://github.com/user-attachments/assets/c361bf1c-3ad7-4531-bdc1-4ba5c7ca481a)
+
+
+nah semoga bermanfaat tutorial review situs, untuk cek dihosting dimana, domain milik siapa, lokasi hosting, provider ISP hosting, NOTED NAMUN GUNAKAN DENGAN BIJAK, JANGAN SPY SITUS PENTING DAN BERMANFAAT, DAN JIKA ADA KERENTANAN JANGAN COBA COBA SISIPI ATAU JEBOL YAK?, KECUALI SITUS YANG MERUGIKAN KAYAK JUDOL, PINJOL NAH BARU BABAT HABIS, KALO JAGO KAMU, di bidang domain, network dan website. 
+
+thanksss, tutorial ini buat segmen baru, review situs web yang sedang rame di Channel Youtube Rafi Rasyadi. 
