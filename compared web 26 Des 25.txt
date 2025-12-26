@@ -149,3 +149,57 @@ Risiko plugin/theme
 Perlu hardening (disable xmlrpc, limit login, dll)
 
 --stack frontend--
+🔹 1. RCAF M – rcafm.asooy.web.id
+🧩 Frontend Stack yang Dipakai
+Frontend utama:
+✅ Tailwind CSS (via CDN)
+cdn.tailwindcss.com/3.4.17 → runtime Tailwind
+✅ Font Awesome 6.4 (CDN)
+✅ Google Fonts
+❌ Tanpa framework JS (React/Vue/Angular ❌)
+❌ Tanpa bundler (Vite/Webpack ❌)
+👉 Model frontend:
+Static HTML + Utility-first CSS (Tailwind CDN)
+⚖️ Berat Halaman (Estimasi Nyata)
+Komponen berat utama:
+Tailwind CDN JS: ~398 KB
+Font Awesome (CSS + font): ~350 KB
+Images lokal:
+Banyak gambar 1–2 MB
+Total gambar ≈ 8–10 MB
+Audio stream: external (tidak membebani initial load)
+📦 Total estimasi load awal:
+🔸 ± 10–12 MB
+⚠️ Catatan Teknis
+Tailwind CDN mengirim full engine, bukan CSS hasil build → berat tapi fleksibel
+Gambar belum dioptimasi (PNG besar)
+Cocok untuk static hosting, tapi bisa jauh lebih ringan jika:
+Tailwind di-build
+Image dikompresi (WebP)
+
+2. RIS FM Pangandaran – risfmpangandaran.com
+🧩 Frontend Stack yang Dipakai
+Frontend utama:
+✅ Bootstrap 5.3.3 (CSS + JS)
+✅ Font Awesome 6.4
+✅ Custom CSS (style.css)
+✅ Vanilla JS (main.js)
+❌ Tidak pakai JS framework modern
+👉 Model frontend:
+Traditional frontend (Bootstrap + PHP-rendered HTML)
+⚖️ Berat Halaman (Estimasi Nyata)
+Komponen berat utama:
+Bootstrap CSS + JS: ~300 KB
+Font Awesome: ~350 KB
+Images jadwal:
+Banyak gambar 2–3 MB
+Total gambar ≈ 35–45 MB
+Font custom: kecil
+📦 Total estimasi load awal:
+🔴 ± 40–50 MB
+⚠️ Catatan Teknis
+Gambar jadwal sangat besar & banyak
+Tidak ada lazy-loading yang efektif
+Bootstrap sendiri bukan masalah, tapi asset gambar dominan
+
+
