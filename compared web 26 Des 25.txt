@@ -1,0 +1,151 @@
+✅ KESIMPULAN KEMUNGKINAN TEKNIS SERVER-SIDE
+🔹 1. rcafm.asooy.web.id
+Kesimpulan utama:
+🔸 Situs kemungkinan besar berbasis HTML statis atau CMS sangat ringan di hosting shared.
+Alasan teknis:
+Menggunakan subdomain provider (asooy.web.id) → indikasi kuat shared hosting / free hosting
+Tidak tampak:
+Endpoint API
+Session / auth
+Struktur CMS besar (WordPress, Laravel, dsb)
+Konten relatif jarang berubah & sederhana
+Kemungkinan stack (urut dari paling mungkin):
+✅ HTML statis + CSS
+✅ PHP sederhana (tanpa framework)
+⚠️ CMS flat-file ringan (mis. Grav / custom)
+Yang hampir pasti tidak digunakan:
+Node.js / Express
+Framework modern (Laravel, Django)
+SPA (React, Vue)
+📌 Tujuan server: hanya serve content, bukan proses logika kompleks.
+🔹 2. risfmpangandaran.com
+Kesimpulan utama:
+🔸 Situs kemungkinan berbasis CMS PHP (sangat besar kemungkinan WordPress) dengan server-side rendering.
+Alasan teknis:
+Domain sendiri → hosting berbayar
+Struktur konten kompleks:
+Program acara
+Jadwal
+Profil
+Pola konten sangat khas website radio berbasis CMS
+HTML panjang → di-render dari server (bukan SPA)
+Kemungkinan stack (urut dari paling mungkin):
+✅ WordPress (PHP + MySQL) ⭐⭐⭐⭐
+✅ PHP CMS custom / template PHP
+⚠️ HTML statis generator (kemungkinan kecil karena update konten)
+Yang kecil kemungkinannya:
+Node.js backend
+Django / Flask
+JAMstack modern
+📌 Tujuan server: kelola konten dinamis via admin panel.
+
+#rcafmasooy
+
+🔴 STACK SERVER-SIDE (CONFIRMED)
+Situs ini 100% STATIC SITE yang di-host di GitHub Pages
+Bukti Teknis (dari header):
+Header
+Makna Teknis
+server: GitHub.com
+🔥 Hosting langsung di GitHub Pages
+via: varnish + x-served-by: Fastly
+CDN bawaan GitHub
+content-type: text/html
+HTML statis
+last-modified
+File fisik statis
+etag
+Caching berbasis file
+❌ Tidak ada X-Powered-By
+Tidak ada backend runtime
+❌ Tidak ada cookie
+Tidak ada session
+❌ Tidak ada PHP/Node
+Tidak ada server logic
+
+🧩 Stack yang Digunakan
+✅ Backend
+❌ Tidak ada backend
+❌ Tidak ada database
+❌ Tidak ada bahasa server (PHP, Node, Python)
+✅ Hosting
+GitHub Pages
+CDN: Fastly
+HTTP/2 aktif
+✅ Site Type
+Pure Static Website
+Kemungkinan dibuat dengan:
+HTML manual, atau
+Static Site Generator (Jekyll / Hugo / dsb — tidak wajib)
+🔐 Keamanan
+✔️ Sangat aman dari sisi server:
+Tidak ada attack surface backend
+Tidak ada SQL Injection
+Tidak ada RCE
+Tidak ada auth/session
+
+Browser
+   ↓
+Fastly CDN (GitHub)
+   ↓
+GitHub Pages
+   ↓
+Static HTML / CSS / JS
+
+#risspangandaran
+
+🔴 STACK SERVER-SIDE (CONFIRMED)
+Website ini adalah situs dinamis berbasis PHP 8.2 yang berjalan di LiteSpeed Server, di-hosting di Hostinger (shared hosting).
+🧾 Bukti Teknis dari Header
+Header
+Arti Teknis
+x-powered-by: PHP/8.2.28
+✅ Backend PHP (versi modern)
+server: LiteSpeed
+✅ Web server LiteSpeed
+platform: hostinger
+✅ Hosting di Hostinger
+panel: hpanel
+✅ Panel resmi Hostinger
+content-type: text/html
+Server-side rendered HTML
+alt-svc: h3 / QUIC
+HTTP/3 aktif (LiteSpeed native)
+Browser
+   ↓
+LiteSpeed Web Server
+   ↓
+PHP 8.2 (LSAPI)
+   ↓
+CMS / PHP Template
+   ↓
+MySQL / MariaDB (implicit)
+Berdasarkan stack & konteks situs radio:
+🥇 WordPress (SANGAT MUNGKIN)
+Alasan:
+Hostinger + LiteSpeed → paket WordPress paling umum
+PHP 8.2 kompatibel
+Tipe konten (jadwal, program, profil)
+Tidak terlihat framework modern (Laravel, Symfony)
+🥈 PHP Custom / Template PHP
+Kemungkinan lebih kecil, tapi masih masuk akal jika:
+Dibuat manual tanpa CMS
+Update konten dilakukan via file
+❌ Hampir pasti bukan:
+Node.js
+Django / Flask
+Static Site
+🔐 Keamanan (Server-Side)
+✅ Positif
+PHP versi 8.2.28 (cukup up-to-date)
+HTTPS aktif
+CSP minimal (upgrade-insecure-requests)
+HTTP/3 aktif → performa bagus
+⚠️ Perlu Perhatian
+x-powered-by: PHP/8.2.28 → sebaiknya disembunyikan
+CSP sangat minimal, belum protektif
+Jika WordPress:
+Risiko plugin/theme
+Perlu hardening (disable xmlrpc, limit login, dll)
+
+--stack frontend--
