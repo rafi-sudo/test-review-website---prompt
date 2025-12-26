@@ -202,4 +202,439 @@ Gambar jadwal sangat besar & banyak
 Tidak ada lazy-loading yang efektif
 Bootstrap sendiri bukan masalah, tapi asset gambar dominan
 
+--Check Response Server--
+🔹 1. risfmpangandaran.com
+📡 Hasil Ping
+IP        : 153.92.11.241
+RTT avg  : ~20.0 ms
+TTL      : 51
+Packet loss : 0%
+🌍 Lokasi & Server
+IP 153.92.11.241
+Hosting: Hostinger
+Lokasi fisik server:
+Asia Tenggara (kemungkinan Singapura / Jakarta region)
+Tipe:
+Shared hosting
+Tanpa CDN global
+🔍 Interpretasi
+RTT ~20 ms → sangat cepat untuk server regional
+TTL 51 → indikasi hop menengah (data center Asia)
+Stabil, tidak ada packet loss
+
+🔹 2. rcafm.asooy.web.id (GitHub Pages)
+📡 Hasil Ping
+IP        : 185.199.109.153
+RTT avg  : ~17.1 ms
+TTL      : 58
+Packet loss : 0%
+🌍 Lokasi & Server
+IP 185.199.109.153
+Provider: GitHub Pages
+CDN: Fastly
+Node CDN terdekat:
+Asia (Singapore POP)
+Tipe:
+CDN global (edge server)
+🔍 Interpretasi
+RTT ~17 ms → lebih cepat
+TTL 58 → hop CDN (lebih banyak node tapi edge dekat)
+Response sangat stabil (mdev kecil)
+⚡ Cepat mana?
+✅ RCAF M (GitHub Pages) sedikit lebih cepat (~3 ms lebih rendah)
+Perbedaannya kecil, tapi konsisten.
+🌍 Server di mana?
+RCAF M → ❗ Tidak satu lokasi tetap
+→ Dilayani dari CDN Fastly node terdekat (Asia/Singapura)
+RIS FM → Server fisik di data center regional Asia (Hostinger)
+
+--check exploit ip direct page--
+
+🔹 1. RCAF M (GitHub Pages)
+Akses langsung → 404 GitHub Pages
+📄 Respons
+404
+There isn't a GitHub Pages site here.
+🔍 Arti Teknis
+Domain hanya valid via hostname yang benar
+Akses langsung ke IP / repo default:
+❌ Tidak memetakan konten
+❌ Tidak membocorkan file
+Ini perilaku normal & aman untuk GitHub Pages
+🔐 Dampak Keamanan
+✅ AMAN
+Tidak ada:
+Directory listing
+Config leak
+Repo exposure
+Tidak bisa:
+Bypass domain
+Enumerasi file lewat IP
+
+🔹 2. RIS FM (Hostinger + LiteSpeed)
+Akses direct → 403 Forbidden
+📄 Respons
+403 Forbidden
+Access to this resource on the server is denied!
+🔍 Arti Teknis
+Web server secara eksplisit menolak akses
+Biasanya disebabkan oleh:
+Virtual Host (vHost) restriction
+Domain-based routing
+Anti-host-header misuse
+🔐 Dampak Keamanan
+✅ INI PERILAKU YANG BAIK
+Mencegah:
+IP-based probing
+Host header abuse
+File enumeration via IP
+Menandakan:
+Konfigurasi server tidak ceroboh
+⚠️ Catatan:
+Ini bukan jaminan aman total
+PHP/CMS masih bisa punya celah di layer aplikasi (plugin, upload, auth)
+
+--Enumerasi Domain--
+🔹 1. rcafm.asooy.web.id
+📡 Hasil DNS
+rafi-sudo.github.io.
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+🔍 Arti Teknis
+CNAME → rafi-sudo.github.io
+Resolves ke 4 IP berbeda
+IP range 185.199.108.0/22 → milik GitHub Pages
+Ini adalah DNS-based load distribution
+✅ Load balancing otomatis
+✅ Failover (jika satu IP down)
+✅ Dilayani dari edge terdekat
+✅ Anti-DDoS implicit (CDN)
+
+🔹 2. risfmpangandaran.com
+📡 Hasil DNS
+153.92.11.241
+Single A record
+Mengarah ke 1 server fisik / VM
+Tidak ada:
+CDN
+Load balancer
+Failover DNS
+⚡ Dampak
+⚠️ Single point of failure
+⚠️ Jika server overload → down
+⚠️ Latency tergantung lokasi user
+❌ Tidak global scalable
+🏆 RCAF M unggul secara arsitektur
+Bukan hanya lebih cepat, tapi:
+Lebih tahan traffic
+Lebih tahan error
+Lebih aman dari serangan layer jaringan
+
+🔹 1. RIS FM – 153.92.11.241
+📡 Hasil
+dig -x 153.92.11.241 +short
+→ (NULL / tidak ada hasil)
+🔍 Artinya
+IP tersebut TIDAK memiliki PTR record (reverse DNS)
+Nama domain tidak terikat balik ke IP
+Ini umum pada shared hosting murah
+🔐 Implikasi Teknis
+❌ Tidak ada identitas server via rDNS
+❌ Kurang ideal untuk:
+Email server (spam score)
+Identifikasi jaringan
+⚠️ Bukan bug, tapi konfigurasi minimal
+
+🔹 2. RCAF M – 185.199.108.153
+📡 Hasil
+dig -x 185.199.108.153 +short
+cdn-185-199-108-153.github.com.
+🔍 Artinya
+PTR record ADA & valid
+IP dikenali sebagai GitHub CDN
+Reverse DNS konsisten dengan forward DNS
+🔐 Implikasi Teknis
+✅ Infrastruktur profesional
+✅ IP jelas milik CDN
+✅ Lebih dipercaya oleh:
+Network device
+ISP
+Sistem keamanan otomatis
+RCAF M:
+DNS rapi
+Reverse & forward konsisten
+Infrastruktur CDN kelas besar
+RIS FM:
+DNS hanya minimum
+PTR tidak diset
+Tipikal shared hosting
+
+--Whois --
+Handle: 153.92.8.0 - 153.92.15.255
+Name: HOSTINGER-ID
+Country: Indonesia (ID)
+Status: Active
+Domain ini di-host di blok IP milik Hostinger Indonesia
+Lokasi server fisik kemungkinan di Indonesia / Singapura region
+Shared hosting → banyak pelanggan di subnet ini
+Type: LEGACY → IP allocation lama, tetap valid
+Domain: RISFMPANGANDARAN.COM
+Registrar: HOSTINGER operations, UAB
+Status: clientTransferProhibited
+Nameservers: NS1.DNS-PARKING.COM, NS2.DNS-PARKING.COM
+Privacy: Enabled (data registrant disembunyikan)
+🔍 Arti Teknis
+Domain dikelola melalui Hostinger
+Nameserver DNS-PARKING.COM → default Hostinger parking / managed DNS
+Registrant disembunyikan → privasi terjaga
+🔐 Implikasi
+Domain tidak rawan informasi terbuka
+Transfer domain diblokir (clientTransferProhibited)
+Tidak ada kebocoran data sensitif dari WHOIS
+
+Domain
+asoooy.web.id (Indonesia, baru 2025)
+Registrar
+PT Digital Registra Indonesia
+Nameserver
+rumahweb.com (lokal)
+IP
+185.199.108.153 – 185.199.111.153 → GitHub Pages / CDN
+IP Asal
+US (GitHub)
+IP Usia
+Tua (~8 tahun, sejak 2017)
+Infrastruktur
+CDN + multi-IP, edge server global
+Status keamanan
+clientTransferProhibited, serverTransferProhibited → aman
+
+
+--✅ ANALISIS SUBDOMAIN & IP--
+🔹 1. RCAF M – rcafm.asooy.web.id
+Subdomain
+IP
+Cloudflare
+rcafm.asooy.web.id
+185.199.110.153
+❌ Cloudflare off (pakai GitHub Pages CDN sendiri)
+Cloudflare tidak digunakan, tapi tetap dilayani via edge CDN GitHub
+Static site → load cepat, distribusi global otomatis
+
+🔹 2. RIS FM – risfmpangandaran.com subdomain
+Subdomain
+IP
+Cloudflare
+blog.risfmpangandaran.com
+153.92.11.241
+❌ Cloudflare off
+stream.risfmpangandaran.com
+103.154.53.57
+❌ Cloudflare off
+www.risfmpangandaran.com
+153.92.11.241
+❌ Cloudflare off
+Semua subdomain langsung ke server Hostinger / server streaming
+Tidak ada CDN atau reverse proxy
+Load, latency, dan proteksi DDoS bergantung server tunggal
+Subdomain stream berbeda IP → mungkin dedicated streaming server atau VPS terpisah
+⚠️ Implikasi
+Tidak ada caching global → jika traffic tinggi → latency meningkat
+Tidak ada proteksi layer jaringan dari Cloudflare → rawan DDoS / probing
+Semua subdomain terlihat langsung dari IP → lebih mudah di-scan / fingerprint
+
+Ada subdomain masing-masing ternyata kita cek kerentanan dari subdomainnya
+
+Root Domain asooy.web.id
+Ping → 203.194.113.85 (ha-biolink.mysrsx.net)
+RTT ~18–19 ms → lokasi server kemungkinan di Asia / Indonesia
+Curl header:
+HTTP/1.1 200 OK
+content-type: text/html;charset=utf-8
+x-powered-by: Nuxt
+Analisis:
+Server menggunakan Nuxt.js → modern frontend framework (SSR / SPA)
+IP berbeda dari subdomain GitHub → root domain di-handle terpisah
+Konten live, tidak ada 404
+Kerentanan potensial:
+Tidak ada error page yang bocor data
+Framework Nuxt.js rumahweb → potensi default misconfig bisa ada, tapi tidak terlihat di header
+Status 200 OK → normal
+Infrastruktur ini terpisah dari GitHub CDN, jadi load & proteksi DDoS bergantung server 203.194.113.85 rumahweb
+
+blog.risfmpangandaran.com
+Platform: WordPress (default post “Hello world!”)
+IP: 153.92.11.241
+Direct IP akses: 403 Forbidden
+Artinya server tidak membolehkan akses langsung ke IP → aman dari browsing via IP
+
+
+Status Cloudflare: off → tidak ada proteksi CDN / DDoS
+🔍 Kesimpulan
+WordPress baru → default post → rawan jika tidak di-update (plugin/theme)
+Direct IP blocked → mengurangi risiko exposure
+Namun, karena Cloudflare off → server rentan terhadap DDoS
+✅ 2. Streaming Subdomain: stream.risfmpangandaran.com
+IP: 103.154.53.57 (ISP lokal ignwifikita.net)
+Ping: ~17–18 ms → latency rendah, server dekat secara geografis
+Ports terbuka:
+22/tcp   open  ssh
+80/tcp   open  http
+443/tcp  open  https
+2022/tcp open  down
+8000/tcp open  http-alt
+10000/tcp open snet-sensor-mgmt
+HTTP/2 302 → redirect
+server: nginx
+x-powered-by: PHP/8.4.13
+security headers: HSTS, X-Frame-Options DENY, X-XSS-Protection, X-Content-Type-Options
+CMS / Streaming software: AzuraCast (radio streaming)
+🔍 Analisis Keamanan
+Redirect 302 → public/ris_fm_pangandaran
+PHP 8.4 → relatif baru, tapi harus patch rutin
+Security headers cukup lengkap:
+HSTS → HTTPS enforced
+X-Frame-Options DENY → anti-clickjacking
+X-XSS-Protection → anti-XSS
+X-Content-Type-Options nosniff → anti MIME sniffing
+Ports:
+22/tcp SSH terbuka → pastikan firewall + key-based auth
+8000, 10000 → kemungkinan internal management → harus dibatasi IP whitelist
+Cloudflare off → tidak ada proteksi tambahan
+
+cek direct IP Port
+✅ TEMUAN: Direct IP → Webmin (Port 10000) TERBUKA
+📌 Fakta Teknis
+IP: 103.154.53.57
+Port: 10000/tcp
+Service: Webmin
+Akses: Login page publik via direct IP
+Artinya:
+Panel administrasi server dapat diakses dari internet secara langsung
+Ini bukan bug, tapi misconfiguration berisiko tinggi.
+🔴 TINGKAT RISIKO: TINGGI
+Kenapa berbahaya?
+Webmin adalah root-level server management panel. Jika terbuka ke publik:
+🔓 Target brute-force (username/password)
+🎯 Target eksploit zero‑day Webmin
+(Webmin punya sejarah CVE serius)
+🧠 Fingerprinting mudah
+OS
+Versi Webmin
+Struktur server
+💥 Jika jebol → FULL SERVER COMPROMISE
+Website
+Streaming
+SSH
+Data
+⚠️ Banyak kasus deface & takeover server berawal dari Webmin terbuka
+🔍 Analisis Teknis
+Port 8000 terbuka
+Ini HTTP streaming port
+Bisa diakses publik, biasanya normal untuk radio online
+Risiko:
+Jika tidak di-hardening, server info bisa di-scan
+Bandwidth terbuka → DoS jika ada flood listener
+Listener stats terlihat
+Info: 2 listeners / peak 7 → ini bisa diakses publik
+Normal, tapi menunjukkan port tidak dibatasi IP
+Content-Type & Mount
+audio/mpeg → streaming langsung
+Mount point bisa menjadi fingerprint server AzuraCast/Icecast
+Integrasi Web
+Stream URL: http://www.risfmpangandaran.com → listener bisa streaming via web
+Tidak ada HTTPS untuk streaming di port 8000 → plaintext → sniffable
+🔴 Potensi Kerentanan / Risiko
+Port 8000 terbuka → bisa jadi target DoS / scraping listener
+HTTP tanpa TLS → traffic streaming bisa disadap (sniffing)
+AzuraCast default mount & metadata → informasi tentang server & software terlihat → fingerprinting
+Server internal exposure:
+Jika Webmin / SSH masih terbuka, flood listener + scanning bisa menjadi jalan masuk ke server
+
+IP: 103.154.53.57
+Port: 2022/tcp → open
+HTTP request (curl / browser) → ERR_INVALID_HTTP_RESPONSE
+Artinya:
+Port mendengar koneksi, tapi bukan HTTP
+Browser mencoba HTTP → server tidak mengerti → invalid response
+🔍 Analisis Teknis
+Port 2022 ≠ standar
+Port 22 biasa untuk SSH
+Port 2022 kemungkinan: alternate SSH port, atau service internal lain (misal AzuraCast admin, custom app)
+ERR_INVALID_HTTP_RESPONSE
+Browser kirim HTTP → service port 2022 tidak berbicara HTTP
+Biasanya:
+SSH → plain TCP, handshake key-based
+Custom TCP app → hanya client tertentu yang bisa connect
+Risiko keamanan
+Port terbuka → bisa di-scan → fingerprinting server
+Jika SSH / service default login → berisiko brute-force
+Jika internal service → exposure tetap ada karena bisa diping dari internet
+
+sekarang tracking bgp hosting dan server
+1️⃣ RCA FM (rcafm.asooy.web.id)
+Subdomain → GitHub Pages
+Origin AS: AS54113 → Fastly, Inc. (US CDN)
+Upstreams / Peers:
+AS4826 → Vocus Connect International Backbone
+AS7018 → AT&T Enterprises, LLC
+AS4637 → Telstra Global
+AS12956 → Telxius (Telefonica Global)
+AS4755 → TATA Communications
+AS5511 → Orange S.A.
+AS9002 → RETN Limited
+AS6762 → Telecom Italia Sparkle
+Kesimpulan:
+Traffik internet global → keluar via Fastly CDN, distribusi global.
+IP 185.199.108.x → US based CDN, bukan Indonesia.
+Root domain → asooy.web.id
+Origin AS: AS58487 → CV Rumahweb Indonesia
+Upstream: AS38158 → PT Cyberindo Aditama
+Kesimpulan:
+Root domain hosted di Indonesia (Rumahweb)
+Langsung keluar ke ISP lokal / upstream Cyberindo
+
+2️⃣ Ris FM (risfmpangandaran.com)
+Root domain / blog
+Origin AS: AS47583 → Hostinger International Limited
+Upstreams:
+AS9340 → PT Indointernet Tbk
+AS4800 → PT Aplikanusa Lintasarta
+Kesimpulan:
+Ris FM domain hosted di Hostinger International → Indonesia via Indointernet & Lintasarta
+IP: 153.92.11.241 → Hostinger, ID
+
+Stream server → stream.risfmpangandaran.com
+Origin AS: AS140479 → PT Inditech Global Network
+Upstreams: AS38158 → PT Cyberindo Aditama
+Kesimpulan:
+Streaming server IP 103.154.53.57 → hosted di Inditech / Cyberindo
+Berbeda dari root domain / blog → dedicated streaming server
+1️⃣ RCA FM (rcafm.asooy.web.id)
+Kelebihan:
+Cepat & latency rendah – karena menggunakan GitHub Pages + Fastly CDN.
+Modern & ringan – stack statis, Tailwind, FontAwesome.
+Aman – static site, tidak ada database atau port sensitif terbuka.
+Murah / Gratis – hosting via GitHub Pages; hanya domain yang perlu dibayar.
+Mudah dikelola – deploy via GitHub, tidak perlu admin server.
+Sangat skalabel – CDN global → bisa handle traffic tinggi tanpa upgrade server.
+Kekurangan:
+Static content only – tidak cocok untuk streaming langsung atau dynamic content.
+Terbatas interaksi user – tidak bisa login, komentar dinamis, atau playlist real-time.
+Tergantung GitHub CDN – kalau ada downtime CDN → situs tidak bisa diakses.
+Root domain berbeda hosting – menambah sedikit kompleksitas DNS.
+2️⃣ RIS FM (risfmpangandaran.com)
+Kelebihan:
+Dynamic & interaktif – WordPress + AzuraCast → bisa buat blog, playlist, streaming real-time.
+Kontrol penuh server – bisa install plugin, custom theme, konfigurasi streaming.
+Single ecosystem – Hostinger + Inditech untuk hosting & streaming.
+Fleksibel untuk radio – mendukung multi-mount streaming, listener stats, song requests.
+Kekurangan:
+Lebih lambat dibanding CDN – latency sedikit lebih tinggi (18–20 ms), tidak ada global CDN default.
+Multi-port & exposed services – SSH, Webmin, AzuraCast → risiko keamanan lebih tinggi.
+Lebih mahal – VPS hosting + streaming server → biaya bulanan.
+Kompleks untuk maintenance – butuh admin server untuk update, backup, security patch.
+Skalabilitas terbatas – harus upgrade VPS / bandwidth kalau listener tinggi.
 
